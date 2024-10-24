@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+"""
+kernel-manifest-generator: Kernel repository manifest generation utility.
+
+Creates a unified manifest combining kernel and related repositories for Android builds.
+
+SPDX-FileCopyrightText: 2024 Paranoid Android
+SPDX-License-Identifier: Apache-2.0
+"""
+
 import logging
 import sys
 import xml.etree.ElementTree as ET
@@ -110,6 +119,15 @@ class ManifestProcessor:
                             element.set("remote", "clo-la")
                             logging.info(
                                 f"Set 'clo-la' remote for project: {element.get('name')}"
+                            )
+
+                        if (
+                            "prebuilts" in project_name.lower()
+                            and "clone-depth" not in element.attrib
+                        ):
+                            element.set("clone-depth", "1")
+                            logging.info(
+                                f"Set clone-depth=1 for prebuilts project: {project_name}"
                             )
 
                     root.append(element)
